@@ -5,8 +5,8 @@ def populate_AB():
     """Populates the initial values for A and B at the start of the game from constants.data
     """
     is_finished = False
-    a_random_int = random.randint(0,constants.data_length -1)
-    b_random_int = random.randint(0,constants.data_length -1)
+    a_random_int = random.randint(0, constants.data_length - 1)
+    b_random_int = random.randint(0, constants.data_length - 1)
     
     while not is_finished: 
         for key in constants.data[a_random_int]:
@@ -24,7 +24,7 @@ def repopulate_B():
     """Generates new values for B after the first turn and the old B is now A
     """
     constants.dict_B = []
-    b_random_int = random.randint(0,constants.data_length -1)
+    b_random_int = random.randint(0, constants.data_length - 1)
     
     for key in constants.data[b_random_int]:
             value = constants.data[b_random_int].get(key)

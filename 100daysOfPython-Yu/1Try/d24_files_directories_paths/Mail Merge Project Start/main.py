@@ -9,7 +9,7 @@
 
 #list of all names to invite
 invited_names_list = []
-with open("./Input/Names/invited_names.txt", 'r') as invited_names:
+with open("Input/Names/invited_names.txt", 'r') as invited_names:
     for line in invited_names.readlines():
         name = line.strip('\n')
         invited_names_list.append(name)
@@ -21,7 +21,7 @@ first_letter_line = []
 
 #whole letter in a list, by line
 default_letter = []
-with open("./Input/Letters/starting_letter.txt", 'r') as starting_letter:
+with open("Input/Letters/starting_letter.txt", 'r') as starting_letter:
     for line in starting_letter.readlines():
         default_letter.append(line)
 

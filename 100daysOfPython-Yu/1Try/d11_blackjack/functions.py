@@ -147,7 +147,8 @@ def hit_or_stand():
     global_variables.dealer_turn = 0
     #hit_or_stand_bool:bool
     
-    while((global_variables.player_points < global_variables.point_limit) and (global_variables.dealer_points < global_variables.point_limit)):
+    while((global_variables.player_points < global_variables.point_limit) and (
+            global_variables.dealer_points < global_variables.point_limit)):
         #if dealer stand and player stand - open all cards and count player with lowest difference to 21
         if((global_variables.player_last_turn == False) and (global_variables.dealer_last_turn == False)):
             remaining_points(global_variables.player_points)
@@ -183,9 +184,9 @@ def hit_or_stand():
             
             if hit_or_stand_choice == 'Hit' or hit_or_stand_choice == 'hit' :
                 global_variables.player_last_turn = True
-                global_variables.player_hand += deal_hand(global_variables.shuffled_deck,1)
-                global_variables.shuffled_deck = update_deck(global_variables.shuffled_deck,1)
-                count_points(global_variables.player_hand,global_variables.player_points)
+                global_variables.player_hand += deal_hand(global_variables.shuffled_deck, 1)
+                global_variables.shuffled_deck = update_deck(global_variables.shuffled_deck, 1)
+                count_points(global_variables.player_hand, global_variables.player_points)
                 global_variables.player_turn = 0
                 global_variables.dealer_turn = 1
                 print(f'You drew {global_variables.player_hand[-1]}.Your hand contains {global_variables.player_hand} and you have {global_variables.player_points} points')
@@ -199,10 +200,10 @@ def hit_or_stand():
             if(global_variables.dealer_points < 17):
                 global_variables.dealer_last_turn = True
                 print('Dealers card value is under 17. Dealer "hits"')
-                global_variables.dealer_hand += deal_hand(global_variables.shuffled_deck,1)
-                global_variables.shuffled_deck = update_deck(global_variables.shuffled_deck,1)
+                global_variables.dealer_hand += deal_hand(global_variables.shuffled_deck, 1)
+                global_variables.shuffled_deck = update_deck(global_variables.shuffled_deck, 1)
                 global_variables.dealer_hand_visible = global_variables.dealer_hand[1:]
-                count_points(global_variables.dealer_hand,global_variables.dealer_points)
+                count_points(global_variables.dealer_hand, global_variables.dealer_points)
                 print(f'Dealers open cards are [{global_variables.dealer_hand_visible}] and he has {global_variables.dealer_points_visible} points')
         
                 global_variables.player_turn = 1
@@ -238,9 +239,10 @@ def clean_up_values(is_clean_values:bool):
         global_variables.dealer_bank = 10000
         
         global_variables.game_stake = 0
-        global_variables.originalDeck = [2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,'Jack','Jack','Jack','Jack','Queen','Queen','Queen','Queen','King','King','King','King','Ace','Ace','Ace','Ace',]
+        global_variables.originalDeck = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 'Jack', 'Jack', 'Jack', 'Jack', 'Queen', 'Queen', 'Queen', 'Queen', 'King', 'King', 'King', 'King', 'Ace', 'Ace', 'Ace', 'Ace', ]
         # deck of cards -> shuffle
-        global_variables.shuffled_deck = random.sample(global_variables.originalDeck, len(global_variables.originalDeck))
+        global_variables.shuffled_deck = random.sample(global_variables.originalDeck, len(
+            global_variables.originalDeck))
 
         global_variables.player_hand = []
         global_variables.dealer_hand = []
@@ -263,9 +265,10 @@ def clean_up_values(is_clean_values:bool):
         #global_variables.dealer_bank -= global_variables.game_stake
         
         global_variables.game_stake = 0
-        global_variables.originalDeck = [2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,'Jack','Jack','Jack','Jack','Queen','Queen','Queen','Queen','King','King','King','King','Ace','Ace','Ace','Ace',]
+        global_variables.originalDeck = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 'Jack', 'Jack', 'Jack', 'Jack', 'Queen', 'Queen', 'Queen', 'Queen', 'King', 'King', 'King', 'King', 'Ace', 'Ace', 'Ace', 'Ace', ]
         # deck of cards -> shuffle
-        global_variables.shuffled_deck = random.sample(global_variables.originalDeck, len(global_variables.originalDeck))
+        global_variables.shuffled_deck = random.sample(global_variables.originalDeck, len(
+            global_variables.originalDeck))
 
         global_variables.player_hand = []
         global_variables.dealer_hand = []

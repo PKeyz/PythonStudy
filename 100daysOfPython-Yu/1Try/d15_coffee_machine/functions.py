@@ -159,9 +159,9 @@ def make_coffe(is_brewable: bool, is_transaction_successful: bool, drink_choice)
         elif drink_choice == 'cappuccino':
             drink = 'a Cappuccino'
             drink_int = 2
-        constants.water -= round(constants.drink_dict[drink_int].get("water"),2)
-        constants.coffee -= round(constants.drink_dict[drink_int].get("coffee"),2)
-        constants.milk -= round(constants.drink_dict[drink_int].get("milk"),2)
+        constants.water -= round(constants.drink_dict[drink_int].get("water"), 2)
+        constants.coffee -= round(constants.drink_dict[drink_int].get("coffee"), 2)
+        constants.milk -= round(constants.drink_dict[drink_int].get("milk"), 2)
         print(f'Making {drink}, have a nice break!')
         print_report()
 

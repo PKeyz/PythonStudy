@@ -69,7 +69,7 @@ class BlackJack:
                 global_variables.player_bank = global_variables.new_values[0]
                 global_variables.dealer_bank = global_variables.new_values[1]
                 
-                initial_deal_hand_lst = functions.deal_hand(global_variables.shuffled_deck,4)
+                initial_deal_hand_lst = functions.deal_hand(global_variables.shuffled_deck, 4)
                 global_variables.player_hand.append(initial_deal_hand_lst[0])
                 global_variables.dealer_hand.append(initial_deal_hand_lst[1])
                 global_variables.player_hand.append(initial_deal_hand_lst[2])
@@ -85,9 +85,11 @@ class BlackJack:
                 print(f'Your starting hand contains {global_variables.player_hand} and you have {global_variables.player_points} points')
                 print(f'Dealers open card is {global_variables.dealer_hand_visible} and he has {global_variables.dealer_points_visible} points')
                 
-                while ((global_variables.player_points <= global_variables.player_bank) and (global_variables.dealer_points <= global_variables.point_limit)):
+                while ((global_variables.player_points <= global_variables.player_bank) and (
+                        global_variables.dealer_points <= global_variables.point_limit)):
                     global_variables.dealer_hand_visible = global_variables.dealer_hand[1:]
-                    if((global_variables.player_points > global_variables.point_limit) or (global_variables.dealer_points == global_variables.point_limit)):
+                    if((global_variables.player_points > global_variables.point_limit) or (
+                            global_variables.dealer_points == global_variables.point_limit)):
                         print(f'Bust! Dealer wins {global_variables.game_stake}$ and has a total of {global_variables.dealer_bank + global_variables.game_stake}$!')
                         print(f'Dealer\'s cards are {global_variables.dealer_hand} and dealer\'s points are {global_variables.dealer_points}')
                         functions.cash_out(False)
@@ -107,7 +109,8 @@ class BlackJack:
                         break
                         #continue game?
                         break
-                    elif((global_variables.player_points == global_variables.point_limit) and (global_variables.dealer_points == global_variables.point_limit)):
+                    elif((global_variables.player_points == global_variables.point_limit) and (
+                            global_variables.dealer_points == global_variables.point_limit)):
                         print('Push!')
                         print(f'Dealer\'s cards are {global_variables.dealer_hand} and dealer\'s points are {global_variables.dealer_points}')
                         
@@ -120,7 +123,8 @@ class BlackJack:
                             game_continue = False
                             print('You exit the game.')
                             break
-                    elif((global_variables.player_points == global_variables.point_limit) and (global_variables.dealer_points < global_variables.point_limit)):
+                    elif((global_variables.player_points == global_variables.point_limit) and (
+                            global_variables.dealer_points < global_variables.point_limit)):
                         print(f'Win! Player wins {global_variables.game_stake}$ and has a total of {global_variables.player_bank + global_variables.game_stake}$!')
                         print(f'Dealer\'s cards are {global_variables.dealer_hand} and dealer\'s points are {global_variables.dealer_points}')
                         functions.cash_out(True)
