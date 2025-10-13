@@ -83,3 +83,8 @@ else:
     # Generate password
     password = ''.join(secrets.choice(char_pool) for _ in range(password_length))
     print(f"Your password: {password}")
+
+#KEY TAKEAWAYS:
+#1 Version: Too complicated, too many lines of code, too many cases - not functional
+#2 Version: Solving variation via boolean options added to a list of characters
+#           randomly adding symbols from resulting list to final password
