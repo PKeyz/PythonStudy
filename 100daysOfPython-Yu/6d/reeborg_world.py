@@ -22,7 +22,7 @@
 # while not at_goal():
 #     if wall_on_right() and wall_in_front():
 #         turn_left()
-#     if not wall_on_right():
+#     elif not wall_on_right():
 #         move_right()
 #     while wall_on_right() and not wall_in_front():
 #         move()
