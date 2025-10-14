@@ -132,4 +132,4 @@ if user_life == 0:
 
 if random_word_list == word_to_guess:
     print("".join(word_to_guess))
-    print("🎉 YOU WIN! 🎉")
+    print("YOU WIN!")
