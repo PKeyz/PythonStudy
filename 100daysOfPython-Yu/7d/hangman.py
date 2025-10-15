@@ -66,6 +66,7 @@ while (user_life != 0) and (hangman_count < 7) and (random_word_list != word_to_
 if user_life == 0:
     print(hangman_img.hangman_pics[hangman_count])
     print(f"****************************NO LIVES LEFT, YOU LOSE! ****************************")
+    print(f"****************************THE WORD WAS: {random_word} ****************************")
 
 if random_word_list == word_to_guess:
     print("".join(word_to_guess))
