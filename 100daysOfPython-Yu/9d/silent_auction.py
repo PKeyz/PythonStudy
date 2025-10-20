@@ -1,6 +1,5 @@
-from operator import index, indexOf
 import ascii
-import os
+
 
 def print_ascii_art():
     print(ascii.ascii_img)
@@ -42,17 +41,17 @@ def find_highest_bidder(bid_list) -> list:
 
     duplicate_bids = []
     highest_bid = 0
-    for any_bid in bid_list:
+
+    for index, any_bid in enumerate(bid_list):
         if any_bid > highest_bid:
             duplicate_bids.clear()
-            duplicate_bids.append(bid_list.index(any_bid))
+            duplicate_bids.append(index)
             highest_bid = any_bid
         elif any_bid == highest_bid:
-            duplicate_bids.append(bid_list.index(any_bid))
-    if len(duplicate_bids) != 0:
-        return duplicate_bids
-    else:
-        return highest_bid
+            duplicate_bids.append(index)
+
+    return duplicate_bids
+
 
 
 
@@ -82,32 +81,20 @@ while auction_on:
     confirm_user_input(name,bid,user_id)
 
     auction_on = is_auction_on()
-    if auction_on:
-        #Clean old bidder text name and value,
-        #os.system('cls')
-        name, bid = ask_user_data()
-
-        name_list.append(name)
-        bid_list.append(bid)
-        user_id = add_user_id()
-
-        confirm_user_input(name, bid, user_id)
-        auction_on = is_auction_on()
 
 highest_bidder = find_highest_bidder(bid_list)
 
 if len(highest_bidder) == 1:
-    winner_name = name_dict['name'][0]
-    winner_bid = name_dict['bid'][0]
-    winner_user_id = name_dict['userID'][0]
+    winner_index = highest_bidder[0]
+    winner_name = name_dict['name'][winner_index]
+    winner_bid = name_dict['bid'][winner_index]
+    winner_user_id = name_dict['userID'][winner_index]
     print(f"The winner is: {winner_name}, with ${winner_bid} and UserID: {winner_user_id}")
 else:
-    for same_bid in highest_bidder:
-        co_bidder_user_id = highest_bidder[highest_bidder.index(same_bid)]
-        co_winner_name = name_dict['name'][highest_bidder[0]]
-        co_winner_bid = name_dict['bid'][highest_bidder[0]]
-        co_winner_user_id = name_dict['userID'][highest_bidder[0]]
-        highest_bidder.pop(0)
+    for index in highest_bidder:
+        co_winner_name = name_dict['name'][index]
+        co_winner_bid = name_dict['bid'][index]
+        co_winner_user_id = name_dict['userID'][index]
         print(f"UserID {co_winner_user_id} with the name: {co_winner_name} bid the same $ amount as another user.\n "
               f"You need to bid higher, to win the auction!")
     auction_on = True
