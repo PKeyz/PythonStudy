@@ -173,12 +173,16 @@ def hit(player):
     player_hand['cards'][player].append(card)
 
 
+def player_options(player):
+    player_choice = input("HIT: '0' \nSPLIT: '/' \nDOUBLE DOWN: '*' \nINSURANCE: '+' \nSURRENDER: '-' \n")
+
+
 options_dict = {
+    '0': hit,
     "/": split_cards,
     '*': double_down,
     '+': insurance,
-    '-': surrender,
-    '0': hit
+    '-': surrender
 }
 
 cards_dict = {
@@ -197,7 +201,7 @@ cards_dict = {
 cards_played = []
 
 
-#first player is dealer
+#last player is dealer
 player_hand = {
     'name':     [],
     'wager':    [],
@@ -208,26 +212,26 @@ player_hand = {
 
 game = True
 #
-# while game:
-#do basic init
 
 gather_players()
 init_players()
 multiplier = decide_game_mode()
-deal_cards()
-print_comment()
-count_card_value(0)
-count_card_value(1)
-count_card_value(2)
-count_card_value(3)
+while game:
 
+    deal_cards()
+    print_comment()
+    for player in range(len(player_hand['name'])):
+        count_card_value(player)
 
-deal_cards()
-print_comment()
-count_card_value(0)
-count_card_value(1)
-count_card_value(2)
-count_card_value(3)
+    deal_cards()
+    print_comment()
+
+    for player in range(len(player_hand['name'])):
+        while player_hand['sum_value'][player]:
+            count_card_value(player)
+            for player in range(len(player_hand['name'])):
+                player_options(player)
+                options_dict[player_options(player)](player)
 #test
 
 
