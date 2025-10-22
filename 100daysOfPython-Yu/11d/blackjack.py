@@ -1,3 +1,5 @@
+from operator import indexOf
+
 import ascii
 import random
 ascii.print_ascii_art()
@@ -39,6 +41,7 @@ def decide_game_mode() -> float:
     return multiplier
 
 def gather_players():
+    print("The maximum amount of players is 6. \n")
     MAX_PLAYERS = 5
     more_players = True
     MIN_WAGER = 100
@@ -63,8 +66,7 @@ def gather_players():
 def init_players():
     for player in range(len(player_hand['name'])):
         player_hand['cards'].append([])
-        player_hand['sum_value'].append([])
-
+        player_hand['sum_value'].append(0)
 
 def get_player_info(index):
     """Helper Function to acquire player info by index later in the game"""
@@ -93,18 +95,17 @@ def draw_card() -> list:
 
 def deal_cards():
     """Manages the dealing of the cards to the players"""
-    for player in range(len(player_hand['name']) ):
+    for player in range(len(player_hand['name'])):
         card = draw_card()
         player_hand['cards'][player].append(card)
-
 
 def print_comment():
     """Prints a statement about who is drawing an open card in the beginning, or when a card is disclosed"""
     #except player_cards['cards'][-1][-1] last card of the Dealer not disclosed
     LAST_DEALER_CARD = 2
-    for player in range(len(player_hand['name']) ):
+    for player in range(len(player_hand['name'])):
         player_info = get_player_info(player)
-        if (player_hand['name'] == "Dealer") and (len(player_info['cards']) == LAST_DEALER_CARD):
+        if (player_info['name'] == "Dealer") and (len(player_info['cards']) == LAST_DEALER_CARD):
             print(f"{player_info['name']}'s second card will be kept secret for now. \n")
         else:
             card_string = transform_card_list_to_str(player_info['cards'])
@@ -120,6 +121,23 @@ def transform_card_list_to_str(card) -> str:
         card_color = cards_dict['color'][card_color_idx].title()
         card_string = (f"{card_rank} of {card_color}")
         return card_string
+
+def count_card_value(player_index):
+    player_info = get_player_info(player_index)
+    player_cards = player_info['cards']
+
+    if len(player_cards) < 3:
+        for card in player_cards[:2]:
+            value_index = card[1]
+            card_value = int(cards_dict['value'][value_index])
+            player_hand['sum_value'][player_index] += card_value
+
+    elif len(player_cards) > 2 and len(player_cards) <= 4:
+        for card in player_cards[2:4]:
+            value_index = card[1]
+            card_value = int(cards_dict['value'][value_index])
+            player_hand['sum_value'][player_index] += card_value
+#if player has ace ask if he wants to count it as 11 or 1
 
 def split_cards():
     """
@@ -185,19 +203,19 @@ game = True
 # while game:
 #do basic init
 
-#for x in range(len(player["name"])) x is index of player
 gather_players()
 init_players()
 multiplier = decide_game_mode()
 deal_cards()
+deal_cards()
 print_comment()
-
+count_card_value(0)
+count_card_value(1)
+count_card_value(2)
+count_card_value(3)
 #test
-print(player_hand)
 
 
-
-draw_card()
 
 
 
