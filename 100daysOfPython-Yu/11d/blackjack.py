@@ -42,8 +42,8 @@ def gather_players():
     more_players = True
     MIN_WAGER = 100
     MAX_WAGER = 1000
-
-    while more_players:
+    MAX_PLAYERS = 6
+    while (len(player_hand['name']) <= MAX_PLAYERS) and (more_players):
         #player_hand
         player_name = input("What is your name? \n")
         player_wager = int(input(f"What is your bet between {MIN_WAGER} and {MAX_WAGER}$ ? \n"))
@@ -86,10 +86,15 @@ def draw_card() -> list:
 
 def deal_cards():
     """Manages the dealing of the cards to the players"""
+    for player in range(len(player_hand) - 1):
+        player_data = get_player_info(player)
+
+        #except player_cards['cards'][-1][-1] last card of the Dealer not disclosed
+
 
 def print_comment():
     """Prints a statement about who is drawing an open card in the beginning, or when a card is disclosed"""
-
+    for player in
 def split_cards():
     """
     If your first two cards have the same numerical value, you may split them into two hands.
