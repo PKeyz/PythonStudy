@@ -29,7 +29,7 @@ ascii.print_ascii_art()
 #
 # In 21, the player has many options to choose from:
 
-def decide_game_mode() -> int:
+def decide_game_mode() -> float:
     """Player can decide to play 5:6 (wager * 1.2), or 3 to 2 (wager * 1.5)"""
     game_mode = input("Decide on a game mode: We can play 2:3: Type '23', or 5:6: Type '56'. \n")
     if game_mode == '56':
@@ -39,10 +39,10 @@ def decide_game_mode() -> int:
     return multiplier
 
 def gather_players():
+    MAX_PLAYERS = 5
     more_players = True
     MIN_WAGER = 100
     MAX_WAGER = 1000
-    MAX_PLAYERS = 6
     while (len(player_hand['name']) <= MAX_PLAYERS) and (more_players):
         #player_hand
         player_name = input("What is your name? \n")
@@ -59,6 +59,12 @@ def gather_players():
     player_wager = random.randint(MIN_WAGER, MAX_WAGER)
     player_hand['name'].append(player_name)
     player_hand['wager'].append(player_wager)
+
+def init_players():
+    for player in range(len(player_hand['name'])):
+        player_hand['cards'].append([])
+        player_hand['sum_value'].append([])
+
 
 def get_player_info(index):
     """Helper Function to acquire player info by index later in the game"""
@@ -77,24 +83,34 @@ def draw_card() -> list:
         # reinit of card_value_idx leads to a new random num, while I need to keep the same one for both
         #card_value_idx = int(cards_dict['value'][card_rank])
         card_color_idx = random.randint(0, len(cards_dict['color']) - 1)
-        new_card = [card_rank_idx,card_rank_idx,card_color_idx]
+        random_card = [card_rank_idx,card_rank_idx,card_color_idx]
 
-        if new_card not in cards_played:
-            cards_played.append(new_card)
+        if random_card not in cards_played:
+            cards_played.append(random_card)
+            new_card = random_card
             new = True
-    return new_card
+            return new_card
 
 def deal_cards():
     """Manages the dealing of the cards to the players"""
-    for player in range(len(player_hand) - 1):
-        player_data = get_player_info(player)
-
-        #except player_cards['cards'][-1][-1] last card of the Dealer not disclosed
+    for player in range(len(player_hand['name']) ):
+        card = draw_card()
+        player_hand['cards'][player].append(card)
 
 
 def print_comment():
     """Prints a statement about who is drawing an open card in the beginning, or when a card is disclosed"""
-    for player in
+    #except player_cards['cards'][-1][-1] last card of the Dealer not disclosed
+    LAST_DEALER_CARD = 2
+    for player in range(len(player_hand) - 1 ):
+        player_info = get_player_info(player)
+        if (player_hand['name'][-1]) and (len(player_info['cards']) == LAST_DEALER_CARD):
+            print(f"{player_info['name']}'s second card will be kept secret for now. \n")
+        else:
+            print(f"{player_info['name']} got a {player_info['cards']}")
+
+def transform_card_list_to_description(card) -> str:
+
 def split_cards():
     """
     If your first two cards have the same numerical value, you may split them into two hands.
@@ -149,7 +165,7 @@ cards_played = []
 player_hand = {
     'name':     [],
     'wager':    [],
-    'cards':    [], # list can contain multiple lists for each card-deck in a split
+    'cards':    [], # list contains multiple lists for each card, up to index 3 in a split
     'sum_value':[]
 }
 
@@ -161,8 +177,12 @@ game = True
 
 #for x in range(len(player["name"])) x is index of player
 gather_players()
-decide_game_mode()
+init_players()
+multiplier = decide_game_mode()
+deal_cards()
+print_comment()
 
+#test
 print(player_hand)
 
 
