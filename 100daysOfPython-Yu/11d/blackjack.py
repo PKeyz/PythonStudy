@@ -102,20 +102,24 @@ def print_comment():
     """Prints a statement about who is drawing an open card in the beginning, or when a card is disclosed"""
     #except player_cards['cards'][-1][-1] last card of the Dealer not disclosed
     LAST_DEALER_CARD = 2
-    for player in range(len(player_hand) - 1 ):
+    for player in range(len(player_hand['name']) ):
         player_info = get_player_info(player)
-        if (player_hand['name'][-1]) and (len(player_info['cards']) == LAST_DEALER_CARD):
+        if (player_hand['name'] == "Dealer") and (len(player_info['cards']) == LAST_DEALER_CARD):
             print(f"{player_info['name']}'s second card will be kept secret for now. \n")
         else:
-            print(f"{player_info['name']} got a {player_info['cards']}")
+            card_string = transform_card_list_to_str(player_info['cards'])
+            print(f"{player_info['name']} got a {card_string}")
 
-def transform_card_list_to_description(card) -> str:
+def transform_card_list_to_str(card) -> str:
     """Takes the card as list and returns two variables with Rank + Color: E.g. card [12,12,2] card_rank = 'Ace', card_color = 'Spaces' """
     card_list = card
     for value in card_list:
-        card_rank = value[0]
-        card_color = value[2].title()
-        return card_rank, card_color
+        card_rank_idx = value[0]
+        card_color_idx = value[2]
+        card_rank = cards_dict['rank'][card_rank_idx].title()
+        card_color = cards_dict['color'][card_color_idx].title()
+        card_string = (f"{card_rank} of {card_color}")
+        return card_string
 
 def split_cards():
     """
