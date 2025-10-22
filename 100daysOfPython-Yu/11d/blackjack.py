@@ -31,7 +31,7 @@ ascii.print_ascii_art()
 
 def decide_game_mode() -> int:
     """Player can decide to play 5:6 (wager * 1.2), or 3 to 2 (wager * 1.5)"""
-    game_mode = input("Decide on a game mode: We can play 5:6: Type '56', or 2:3: Type '23'. \n")
+    game_mode = input("Decide on a game mode: We can play 2:3: Type '23', or 5:6: Type '56'. \n")
     if game_mode == '56':
         multiplier = 1.2
     elif game_mode == '23':
@@ -69,12 +69,13 @@ def get_player_info(index):
 def draw_card() -> list:
     """Generate a new random card from cards_dict that is not already in cards_played"""
     new = False
-    new_card = []
     while not new:
-        card_rank = random.randint(0,len(cards_dict['rank']))
-        card_value = random.randint(0,len(cards_dict['value']))
-        card_color = random.randint(0, len(cards_dict['color']))
-        new_card.append(card_rank,card_value,card_color)
+        card_rank_idx = random.randint(0,len(cards_dict['rank']) - 1)
+        # reinit of card_value_idx leads to a new random num, while I need to keep the same one for both
+        #card_value_idx = int(cards_dict['value'][card_rank])
+        card_color_idx = random.randint(0, len(cards_dict['color']) - 1)
+        new_card = [card_rank_idx,card_rank_idx,card_color_idx]
+
         if new_card not in cards_played:
             cards_played.append(new_card)
             new = True
@@ -158,7 +159,7 @@ decide_game_mode()
 
 
 
-
+draw_card()
 
 
 
