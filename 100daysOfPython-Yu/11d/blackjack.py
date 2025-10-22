@@ -110,6 +110,12 @@ def print_comment():
             print(f"{player_info['name']} got a {player_info['cards']}")
 
 def transform_card_list_to_description(card) -> str:
+    """Takes the card as list and returns two variables with Rank + Color: E.g. card [12,12,2] card_rank = 'Ace', card_color = 'Spaces' """
+    card_list = card
+    for value in card_list:
+        card_rank = value[0]
+        card_color = value[2].title()
+        return card_rank, card_color
 
 def split_cards():
     """
