@@ -40,15 +40,16 @@ def decide_game_mode() -> int:
 
 def gather_players():
     more_players = True
+    MAX_WAGER = 1000
     #init dealer
     player_name = "Dealer"
-    player_wager = random.randint(100,1000)
+    player_wager = random.randint(100,MAX_WAGER)
     player_hand['name'].append(player_name)
     player_hand['wager'].append(player_wager)
     while more_players:
         #player_hand
         player_name = input("What is your name? \n")
-        player_wager = int(input("What is your bet $ ? \n"))
+        player_wager = int(input(f"What is your bet up to {MAX_WAGER}$ ? \n"))
         player_hand['name'].append(player_name)
         player_hand['wager'].append(player_wager)
         ask_for_more_players = input("are any other players at the table? Type 'Y' or ANY KEY \n").lower()
