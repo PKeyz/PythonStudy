@@ -64,6 +64,7 @@ def gather_players():
     player_hand['wager'].append(player_wager)
 
 def init_players():
+    """Initializes lists and starting values for the players"""
     for player in range(len(player_hand['name'])):
         player_hand['cards'].append([])
         player_hand['sum_value'].append(0)
@@ -98,6 +99,7 @@ def deal_cards():
     for player in range(len(player_hand['name'])):
         card = draw_card()
         player_hand['cards'][player].append(card)
+
 
 def print_comment():
     """Prints a statement about who is drawing an open card in the beginning, or when a card is disclosed"""
@@ -165,12 +167,18 @@ def surrender():
     Players have the option of surrendering one half of their original wager after receiving their first two cards.
     If you surrender your cards, the dealer will take half of your wager. (Note: The Surrender option is not available in the Double Deck game.)
     """
+def hit(player):
+    """Deals an extra card to the user"""
+    card = draw_card()
+    player_hand['cards'][player].append(card)
+
 
 options_dict = {
     "/": split_cards,
-    "*": double_down,
-    "+": insurance,
-    "-": surrender
+    '*': double_down,
+    '+': insurance,
+    '-': surrender,
+    '0': hit
 }
 
 cards_dict = {
@@ -207,6 +215,13 @@ gather_players()
 init_players()
 multiplier = decide_game_mode()
 deal_cards()
+print_comment()
+count_card_value(0)
+count_card_value(1)
+count_card_value(2)
+count_card_value(3)
+
+
 deal_cards()
 print_comment()
 count_card_value(0)
