@@ -40,16 +40,13 @@ def decide_game_mode() -> int:
 
 def gather_players():
     more_players = True
+    MIN_WAGER = 100
     MAX_WAGER = 1000
-    #init dealer
-    player_name = "Dealer"
-    player_wager = random.randint(100,MAX_WAGER)
-    player_hand['name'].append(player_name)
-    player_hand['wager'].append(player_wager)
+
     while more_players:
         #player_hand
         player_name = input("What is your name? \n")
-        player_wager = int(input(f"What is your bet up to {MAX_WAGER}$ ? \n"))
+        player_wager = int(input(f"What is your bet between {MIN_WAGER} and {MAX_WAGER}$ ? \n"))
         player_hand['name'].append(player_name)
         player_hand['wager'].append(player_wager)
         ask_for_more_players = input("are any other players at the table? Type 'Y' or ANY KEY \n").lower()
@@ -57,6 +54,11 @@ def gather_players():
             more_players = True
         else:
             more_players = False
+    # init dealer
+    player_name = "Dealer"
+    player_wager = random.randint(MIN_WAGER, MAX_WAGER)
+    player_hand['name'].append(player_name)
+    player_hand['wager'].append(player_wager)
 
 def get_player_info(index):
     """Helper Function to acquire player info by index later in the game"""
@@ -156,7 +158,7 @@ game = True
 gather_players()
 decide_game_mode()
 
-
+print(player_hand)
 
 
 
