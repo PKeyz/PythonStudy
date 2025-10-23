@@ -30,6 +30,8 @@ ascii.print_ascii_art()
 # Blackjack is paid either 6 to 5 (player wager*1.2) or 3 to 2 (wager*1.5), depending on the type of Blackjack you are playing.
 #
 # In 21, the player has many options to choose from:
+def print_break_sequence():
+    print(r"==============================================================================================")
 
 def decide_game_mode() -> float:
     """Player can decide to play 5:6 (wager * 1.2), or 3 to 2 (wager * 1.5)"""
@@ -66,8 +68,8 @@ def gather_players():
 def init_players():
     """Initializes lists and starting values for the players"""
     for player in range(len(player_hand['name'])):
-        player_hand['cards'].append([])
-        player_hand['sum_value'].append(0)
+        player_hand['cards'].append([[]])      # Always nested - 1 hand by default
+        player_hand['sum_value'].append([0])   # Always a list
 
 def get_player_info(index):
     """Helper Function to acquire player info by index later in the game"""
@@ -98,19 +100,21 @@ def deal_cards():
     """Manages the dealing of the cards to the players"""
     for player in range(len(player_hand['name'])):
         card = draw_card()
-        player_hand['cards'][player].append(card)
+        player_hand['cards'][player][0].append(card)  # Always append to hand 0
 
 
 def print_comment():
     """Prints a statement about who is drawing an open card in the beginning, or when a card is disclosed"""
-    #except player_cards['cards'][-1][-1] last card of the Dealer not disclosed
     LAST_DEALER_CARD = 2
     for player in range(len(player_hand['name'])):
         player_info = get_player_info(player)
-        if (player_info['name'] == "Dealer") and (len(player_info['cards']) == LAST_DEALER_CARD):
-            print(f"{player_info['name']}'s second card will be kept secret for now. \n")
+
+        if (player_info['name'] == "Dealer") and (len(player_info['cards'][0]) == LAST_DEALER_CARD):
+            print(f"{player_info['name']}'s second card will be kept secret for now.")
         else:
-            newest_card = player_info['cards'][-1]
+            # Get the newest card from the last hand
+            last_hand = player_info['cards'][-1]  # Get last hand
+            newest_card = last_hand[-1]  # Get last card from that hand
             card_string = transform_card_list_to_str(newest_card)
             print(f"{player_info['name']} got a {card_string}")
 
@@ -123,28 +127,39 @@ def transform_card_list_to_str(card) -> str:
     card_color = cards_dict['color'][card_color_idx].title()
     return f"{card_rank} of {card_color}"
 
-def count_card_value(player_index):
-    player_info = get_player_info(player_index)
-    player_cards = player_info['cards']
 
-    if len(player_cards) < 3:
-        for card in player_cards[:2]:
-            value_index = card[1]
-            card_value = int(cards_dict['value'][value_index])
-            player_hand['sum_value'][player_index] += card_value
+def count_card_value(player_index, hand_index=0):
+    """Count cards for a specific hand"""
+    player_cards = player_hand['cards'][player_index][hand_index]
 
-    elif len(player_cards) > 2 and len(player_cards) <= 4:
-        for card in player_cards[2:4]:
-            value_index = card[1]
-            card_value = int(cards_dict['value'][value_index])
-            player_hand['sum_value'][player_index] += card_value
+    total = 0
+    for card in player_cards:
+        value_index = card[1]
+        card_value = int(cards_dict['value'][value_index])
+        total += card_value
+
+    player_hand['sum_value'][player_index][hand_index] = total
 #if player has ace ask if he wants to count it as 11 or 1
 
-def split_cards():
-    """
-    If your first two cards have the same numerical value, you may split them into two hands.
-    The second hand’s bet must be equal to the original bet. If the split pair is Aces, you are limited to a one-card draw on each hand. """
 
+def count_all_hands(player_index):
+    """Count all hands for a player (whether split or not)"""
+    for hand_idx in range(len(player_hand['cards'][player_index])):
+        count_card_value(player_index, hand_idx)
+
+
+def split_cards(player_index):
+        """Split a player's hand into two
+        If your first two cards have the same numerical value, you may split them into two hands.
+        The second hand’s bet must be equal to the original bet. If the split pair is Aces, you are limited to a one-card draw on each hand. """
+        first_hand = player_hand['cards'][player_index][0]
+
+        # Move second card to new hand
+        second_card = first_hand.pop()
+        player_hand['cards'][player_index].append([second_card])
+
+        # Initialize sum for second hand
+        player_hand['sum_value'][player_index].append(0)
 
 def double_down():
     """
@@ -168,8 +183,10 @@ def surrender():
     """
 def hit(player):
     """Deals an extra card to the user"""
+    player_info = get_player_info(player)
     card = draw_card()
     player_hand['cards'][player].append(card)
+    print(f"{player_info['name']} draws a card!")
 
 
 def player_options(player):
@@ -219,6 +236,7 @@ while game:
 
     deal_cards()
     print_comment()
+    print_break_sequence()
     for player in range(len(player_hand['name'])):
         count_card_value(player)
 
@@ -226,11 +244,17 @@ while game:
     print_comment()
 
     for player in range(len(player_hand['name'])):
-        while player_hand['sum_value'][player]:
-            count_card_value(player)
-            for player in range(len(player_hand['name'])):
-                player_options(player)
-                options_dict[player_options(player)](player)
+        print_break_sequence()
+        count_card_value(player)
+        player_info = get_player_info(player)
+        for hand_index in range(len(player_info['cards'])):
+            while player_info['sum_value'][hand_index] < 21:
+                if player_info['name']=="Dealer" and player_info['sum_value'] == 17:
+                    hit(player)
+                for player in range(len(player_hand['name'])):
+                    player_options(player)
+                    options_dict[player_options(player)](player)
+                    count_card_value(player)
 #test
 
 
