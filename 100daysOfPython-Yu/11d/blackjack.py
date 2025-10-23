@@ -110,19 +110,18 @@ def print_comment():
         if (player_info['name'] == "Dealer") and (len(player_info['cards']) == LAST_DEALER_CARD):
             print(f"{player_info['name']}'s second card will be kept secret for now. \n")
         else:
-            card_string = transform_card_list_to_str(player_info['cards'])
+            newest_card = player_info['cards'][-1]
+            card_string = transform_card_list_to_str(newest_card)
             print(f"{player_info['name']} got a {card_string}")
+
 
 def transform_card_list_to_str(card) -> str:
     """Takes the card as list and returns two variables with Rank + Color: E.g. card [12,12,2] card_rank = 'Ace', card_color = 'Spaces' """
-    card_list = card
-    for value in card_list:
-        card_rank_idx = value[0]
-        card_color_idx = value[2]
-        card_rank = cards_dict['rank'][card_rank_idx].title()
-        card_color = cards_dict['color'][card_color_idx].title()
-        card_string = (f"{card_rank} of {card_color}")
-        return card_string
+    card_rank_idx = card[0]
+    card_color_idx = card[2]
+    card_rank = cards_dict['rank'][card_rank_idx].title()
+    card_color = cards_dict['color'][card_color_idx].title()
+    return f"{card_rank} of {card_color}"
 
 def count_card_value(player_index):
     player_info = get_player_info(player_index)
