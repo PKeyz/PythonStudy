@@ -68,7 +68,7 @@ def gather_players():
 def init_players():
     """Initializes lists and starting values for the players"""
     for player in range(len(player_hand['name'])):
-        player_hand['cards'].append([[]])      # Always nested - 1 hand by default
+        player_hand['cards'].append([  []  ])      # Always nested - 1 hand by default
         player_hand['sum_value'].append([0])   # Always a list
 
 def get_player_info(index):
@@ -118,6 +118,13 @@ def print_comment():
             card_string = transform_card_list_to_str(newest_card)
             print(f"{player_info['name']} got a {card_string}")
 
+def print_single_value_comment(player, hand_index = 0):
+    player_info = get_player_info(player)
+    last_hand = player_info['cards'][-1]  # Get last hand
+    newest_card = last_hand[-1]  # Get last card from that hand
+    card_string = transform_card_list_to_str(newest_card)
+
+    print(f"{player_info['name']} got a {card_string} and a total value of {player_info['sum_value'][hand_index]}")
 
 def transform_card_list_to_str(card) -> str:
     """Takes the card as list and returns two variables with Rank + Color: E.g. card [12,12,2] card_rank = 'Ace', card_color = 'Spaces' """
@@ -147,58 +154,79 @@ def count_all_hands(player_index):
     for hand_idx in range(len(player_hand['cards'][player_index])):
         count_card_value(player_index, hand_idx)
 
+def initiate_first_two_rounds():
+    """Sums up first two rounds of dealing the cards to the players"""
+    deal_cards()
+    print("ROUND 1 CARDS:")
+    print_comment()
+    print_break_sequence()
+    deal_cards()
+    print("ROUND 2 CARDS:")
+    print_comment()
+#
+# def split_cards(player_index):
+#         """Split a player's hand into two
+#         If your first two cards have the same numerical value, you may split them into two hands.
+#         The second hand’s bet must be equal to the original bet. If the split pair is Aces, you are limited to a one-card draw on each hand. """
+#         first_hand = player_hand['cards'][player_index][0]
+#
+#         # Move second card to new hand
+#         second_card = first_hand.pop()
+#         player_hand['cards'][player_index].append([second_card])
+#
+#         # Initialize sum for second hand
+#         player_hand['sum_value'][player_index].append(0)
+#
+# def double_down():
+#     """
+#     You can double down in blackjack after receiving your first two cards.
+#     You may elect to wager an additional amount not to exceed the value of the original bet.
+#     With a double down, you will be dealt one additional card only.
+#     """
+#
+# def insurance():
+#     """
+#     If the dealer’s face-up card is an Ace, you may elect to take insurance.
+#     Insurance in blackjack is a wager that the dealer has a blackjack.
+#     You may bet up to one-half of your original bet.
+#     Insurance bets pay 2 to 1 if the dealer has a blackjack, but lose in all other instances.
+#     """
+#
+# def surrender():
+#     """
+#     Players have the option of surrendering one half of their original wager after receiving their first two cards.
+#     If you surrender your cards, the dealer will take half of your wager. (Note: The Surrender option is not available in the Double Deck game.)
+#     """
 
-def split_cards(player_index):
-        """Split a player's hand into two
-        If your first two cards have the same numerical value, you may split them into two hands.
-        The second hand’s bet must be equal to the original bet. If the split pair is Aces, you are limited to a one-card draw on each hand. """
-        first_hand = player_hand['cards'][player_index][0]
-
-        # Move second card to new hand
-        second_card = first_hand.pop()
-        player_hand['cards'][player_index].append([second_card])
-
-        # Initialize sum for second hand
-        player_hand['sum_value'][player_index].append(0)
-
-def double_down():
-    """
-    You can double down in blackjack after receiving your first two cards.
-    You may elect to wager an additional amount not to exceed the value of the original bet.
-    With a double down, you will be dealt one additional card only.
-    """
-
-def insurance():
-    """
-    If the dealer’s face-up card is an Ace, you may elect to take insurance.
-    Insurance in blackjack is a wager that the dealer has a blackjack.
-    You may bet up to one-half of your original bet.
-    Insurance bets pay 2 to 1 if the dealer has a blackjack, but lose in all other instances.
-    """
-
-def surrender():
-    """
-    Players have the option of surrendering one half of their original wager after receiving their first two cards.
-    If you surrender your cards, the dealer will take half of your wager. (Note: The Surrender option is not available in the Double Deck game.)
-    """
-def hit(player):
+def hit(player, hand_index = 0):
     """Deals an extra card to the user"""
     player_info = get_player_info(player)
     card = draw_card()
-    player_hand['cards'][player].append(card)
+    player_hand['cards'][player][hand_index].append(card)
     print(f"{player_info['name']} draws a card!")
 
 
+def stand(player):
+    """Player has enough cards, turns move to the next player"""
+    """Useless function because you just need to skip to the next player"""
+
+
 def player_options(player):
-    player_choice = input("HIT: '0' \nSPLIT: '/' \nDOUBLE DOWN: '*' \nINSURANCE: '+' \nSURRENDER: '-' \n")
+        player_info = get_player_info(player)
+        print(f"{player_info['name']}'s turn: ")
+        player_choice = input("HIT: '0' \nSTAND: '1' \n")
+        if player_choice in options_dict:
+            #options_dict[player_choice](player, hand_index = 0)
+            return player_choice
 
 
 options_dict = {
     '0': hit,
-    "/": split_cards,
-    '*': double_down,
-    '+': insurance,
-    '-': surrender
+    '1': stand
+    # "/": split_cards,
+    # '*': double_down,
+    # '+': insurance,
+    # '-': surrender
 }
 
 cards_dict = {
@@ -234,28 +262,37 @@ init_players()
 multiplier = decide_game_mode()
 while game:
 
-    deal_cards()
-    print_comment()
-    print_break_sequence()
-    for player in range(len(player_hand['name'])):
-        count_card_value(player)
-
-    deal_cards()
-    print_comment()
+    initiate_first_two_rounds()
 
     for player in range(len(player_hand['name'])):
         print_break_sequence()
         count_card_value(player)
         player_info = get_player_info(player)
+
+        if player_info['name'] == "Dealer" and player_info['sum_value'][player] <= 17:
+            hit(player)
+        elif player_info['name'] == "Dealer" and player_info['sum_value'][player] >= 17:
+            break
+
         for hand_index in range(len(player_info['cards'])):
-            while player_info['sum_value'][hand_index] < 21:
-                if player_info['name']=="Dealer" and player_info['sum_value'] == 17:
-                    hit(player)
-                for player in range(len(player_hand['name'])):
-                    player_options(player)
-                    options_dict[player_options(player)](player)
+            game_loop = True
+            while game_loop:
+                if player_info['sum_value'][hand_index] > 21:
+                    print(f"BUST! {player_info['name']} looses with {player_info['sum_value']}")
+                    game_loop = False
+                if player_info['sum_value'] == 21:
+                    print(f"{player_info['name']} has {player_info['sum_value']}! ")
+                    game_loop = False
+
+                if player_info['sum_value'][hand_index] <= 21:
+                    player_choice = player_options(player)
+                    if player_choice == "1":
+                        break
+                    options_dict[player_choice](player, 0)
                     count_card_value(player)
-#test
+                    player_info = get_player_info(player)
+                    print_single_value_comment(player)
+
 
 
 

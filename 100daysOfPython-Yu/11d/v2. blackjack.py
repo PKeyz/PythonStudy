@@ -45,11 +45,34 @@ ascii.print_ascii_art()
 def print_break_sequence():
     print(r"==============================================================================================")
 
+def gather_players():
+    print("The maximum amount of players is 6. \n")
+    MAX_PLAYERS = 5
+    more_players = True
+    MIN_WAGER = 100
+    MAX_WAGER = 1000
+    while (len(player_hand['name']) <= MAX_PLAYERS) and (more_players):
+        #player_hand
+        player_name = input("What is your name? \n")
+        player_wager = int(input(f"What is your bet between {MIN_WAGER} and {MAX_WAGER}$ ? \n"))
+        player_hand['name'].append(player_name)
+        player_hand['wager'].append(player_wager)
+        ask_for_more_players = input("are any other players at the table? Type 'Y' or ANY KEY \n").lower()
+        if ask_for_more_players == 'y':
+            more_players = True
+        else:
+            more_players = False
+    # init dealer
+    player_name = "Dealer"
+    player_wager = random.randint(MIN_WAGER, MAX_WAGER)
+    player_hand['name'].append(player_name)
+    player_hand['wager'].append(player_wager)
+
 def init_players():
     """Initializes lists and starting values for the players"""
-    for player in range(len(player_hand['name'])):
-        player_hand['cards'].append([[]])      # Always nested - 1 hand by default
-        player_hand['sum_value'].append([0])   # Always a list
+    #for player in range(len(player_hand['name'])):
+    player_hand['cards'].append([   []    ])      # Always nested - 1 hand by default
+    player_hand['sum_value'].append([0])   # Always a list
 
 def get_player_info(index):
     """Helper Function to acquire player info by index later in the game"""
@@ -59,6 +82,15 @@ def get_player_info(index):
         'cards':player_hand['cards'][index],
         'sum_value':player_hand['sum_value'][index]
     }
+
+def decide_game_mode() -> float:
+    """Player can decide to play 5:6 (wager * 1.2), or 3 to 2 (wager * 1.5)"""
+    game_mode = input("Decide on a game mode: We can play 2:3: Type '23', or 5:6: Type '56'. \n")
+    if game_mode == '56':
+        multiplier = 1.2
+    elif game_mode == '23':
+        multiplier = 1.5
+    return multiplier
 
 def draw_card() -> list:
     """Generate a new random card from cards_dict that is not already in cards_played"""
@@ -74,9 +106,9 @@ def draw_card() -> list:
                 user_choice_value = input(
                     "You drew an Ace: Do you want to keep it for 1 point, or 11 points? \nPrint '1', or '11' \n")
             #Original ACE is saved to played_cards list for later comparison, but the adjusted Ace goes to player hand
-            cards_played.append(random_card)
-            if user_choice_value == "1":
-                random_card[1] = user_choice_value
+                cards_played.append(random_card)
+                if user_choice_value == "1":
+                    random_card[1] = user_choice_value
         new_card = random_card
         new = True
         return new_card
@@ -96,6 +128,20 @@ def transform_card_list_to_str(card) -> str:
     card_color = cards_dict['color'][card_color_idx].title()
     return f"{card_rank} of {card_color}"
 
+def print_comment():
+    """Prints a statement about who is drawing an open card in the beginning, or when a card is disclosed"""
+    LAST_DEALER_CARD = 2
+    for player in range(len(player_hand['name'])):
+        player_info = get_player_info(player)
+
+        if (player_info['name'] == "Dealer") and (len(player_info['cards'][0]) == LAST_DEALER_CARD):
+            print(f"{player_info['name']}'s second card will be kept secret for now.")
+        else:
+            # Get the newest card from the last hand
+            last_hand = player_info['cards'][-1]  # Get last hand
+            newest_card = last_hand[-1]  # Get last card from that hand
+            card_string = transform_card_list_to_str(newest_card)
+            print(f"{player_info['name']} got a {card_string}")
 
 def count_card_value(player_index):
     """Count cards for a specific hand"""
@@ -125,10 +171,9 @@ def player_options(player):
     player_info = get_player_info(player)
     while player_info['sum_value'] <= 21:
         player_choice = input("HIT: '0' \nSTAND: '1' \n")
-        if player_choice == '0':
-            hit(player)
-        elif player_choice == "1":
-            continue
+        if player_choice in options_dict:
+            options_dict[player_choice](player)
+
     if player_info['sum_value'] >= 21:
         print("BUST! Player hast a total over 21 points")
 
@@ -153,24 +198,31 @@ cards_played = []
 player_hand = {
     'name':     [],
     'wager':    [],
-    'cards':    [], # list contains multiple lists for each card, up to index 3 in a split
+    'cards':    [], # list contains multiple lists for each card
     'sum_value':[]
 }
 
 
 game = True
+
+gather_players()
+init_players()
+multiplier = decide_game_mode()
 while game:
-    deal_cards()
 
     deal_cards()
+    print_comment()
+    print_break_sequence()
+    for player in range(len(player_hand['name'])):
 
-    for player in player_hand['name']:
-        player_info = get_player_info(player)
-        player_in_game = True
+        deal_cards() # to player and Dealer twice
+        print_comment() # to let the users know who got what
+        deal_cards()
+        print_comment()
+        for player in range(len(player_hand['name'])):
+            print_break_sequence()
 
-        while player_in_game:
-            player_options(player)
-
+            player_options(player)  # options hit or stand :: +1 card +x to sum_value  check >=< 21 for BUST!
 
 
 
