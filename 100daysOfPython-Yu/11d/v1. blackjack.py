@@ -31,6 +31,7 @@ ascii.print_ascii_art()
 #
 # In 21, the player has many options to choose from:
 def print_break_sequence():
+    """Prints a long sequence of  ======="""
     print(r"==============================================================================================")
 
 def decide_game_mode() -> float:
@@ -43,6 +44,7 @@ def decide_game_mode() -> float:
     return multiplier
 
 def gather_players():
+    """collects player names and wagers to put them in player_hand dict"""
     print("The maximum amount of players is 6. \n")
     MAX_PLAYERS = 5
     more_players = True
@@ -119,6 +121,7 @@ def print_comment():
             print(f"{player_info['name']} got a {card_string}")
 
 def print_single_value_comment(player, hand_index = 0):
+    """Prints the last drawn cards name"""
     player_info = get_player_info(player)
     last_hand = player_info['cards'][-1]  # Get last hand
     newest_card = last_hand[-1]  # Get last card from that hand
@@ -134,8 +137,20 @@ def transform_card_list_to_str(card) -> str:
     card_color = cards_dict['color'][card_color_idx].title()
     return f"{card_rank} of {card_color}"
 
+def print_dealer_state():
+    """Prints dealer cards and sum value at the end of the player rotation"""
+    dealer_info = get_player_info(-1)
+    print(f"The {dealer_info['name']} has ")
+    for dealer_card in range(len(dealer_info['cards'][-1])):
+        last_hand = dealer_info['cards'][-1]  # Get last hand
+        newest_card = last_hand[dealer_card]  # Get last card from that hand
+        card_string = transform_card_list_to_str(newest_card)
+        print(f"{card_string}")
+    dealer_total_card_value = dealer_info['sum_value']
+    print(f"The Dealer has {dealer_total_card_value} points.")
+    print_break_sequence()
 
-def count_card_value(player_index, hand_index=0):
+def count_card_value(player_index, hand_index = 0):
     """Count cards for a specific hand"""
     player_cards = player_hand['cards'][player_index][hand_index]
 
@@ -211,13 +226,15 @@ def stand(player):
     """Useless function because you just need to skip to the next player"""
 
 
+
 def player_options(player):
-        player_info = get_player_info(player)
-        print(f"{player_info['name']}'s turn: ")
-        player_choice = input("HIT: '0' \nSTAND: '1' \n")
-        if player_choice in options_dict:
-            #options_dict[player_choice](player, hand_index = 0)
-            return player_choice
+    """Prints what a player can do"""
+    player_info = get_player_info(player)
+    print(f"{player_info['name']}'s turn: ")
+    player_choice = input("HIT: '0' \nSTAND: '1' \n")
+    if player_choice in options_dict:
+        #options_dict[player_choice](player, hand_index = 0)
+        return player_choice
 
 
 options_dict = {
@@ -260,38 +277,81 @@ game = True
 gather_players()
 init_players()
 multiplier = decide_game_mode()
+# Phase 1: Player draw cards
 while game:
 
     initiate_first_two_rounds()
 
-    for player in range(len(player_hand['name'])):
+    for player in range(len(player_hand['name']) - 1 ):
         print_break_sequence()
         count_card_value(player)
         player_info = get_player_info(player)
 
-        if player_info['name'] == "Dealer" and player_info['sum_value'][player] <= 17:
-            hit(player)
-        elif player_info['name'] == "Dealer" and player_info['sum_value'][player] >= 17:
-            break
+        for hand_index in range(len(player_info['cards'])):
+            if player_info['sum_value'][hand_index] == 21:
+                print(f"{player_info['name']} has a Blackjack!")
+                print(f"{player_info['name']} has {player_info['sum_value']}! ")
+                continue
+            else:
+                pass
 
         for hand_index in range(len(player_info['cards'])):
             game_loop = True
             while game_loop:
-                if player_info['sum_value'][hand_index] > 21:
-                    print(f"BUST! {player_info['name']} looses with {player_info['sum_value']}")
-                    game_loop = False
-                if player_info['sum_value'] == 21:
-                    print(f"{player_info['name']} has {player_info['sum_value']}! ")
-                    game_loop = False
 
                 if player_info['sum_value'][hand_index] <= 21:
                     player_choice = player_options(player)
                     if player_choice == "1":
                         break
-                    options_dict[player_choice](player, 0)
+                    options_dict[player_choice](player,hand_index)
                     count_card_value(player)
                     player_info = get_player_info(player)
                     print_single_value_comment(player)
+
+                if player_info['sum_value'][hand_index] == 21:
+                    print(f"21! {player_info['name']} wins!")
+                    print(f"{player_info['name']} has {player_info['sum_value']}! ")
+                    break
+
+                if player_info['sum_value'][hand_index] > 21:
+                    player_hand['wager'][player] = 0
+                    print(f"BUST! {player_info['name']} looses {player_info['wager']} with {player_info['sum_value']}!")
+                    break
+
+    print_break_sequence()
+
+    # Phase 2: Dealer plays
+    dealer_index = len(player_hand['name']) - 1
+    count_card_value(dealer_index)
+    while player_hand['sum_value'][dealer_index][0] < 17:
+        hit(dealer_index, 0)
+        count_card_value(dealer_index)
+
+
+    # Phase 3: Compare and payout
+    print_dealer_state()
+
+    dealer_value = player_hand['sum_value'][dealer_index][0]
+    dealer_bust = dealer_value > 21
+
+    for player in range(len(player_hand['name']) -1):
+        player_value = player_hand['sum_value'][player][0]
+
+        if player_value > 21:
+            continue  # Already busted
+
+        # Win conditions
+        if dealer_bust or player_value > dealer_value:
+            player_hand['wager'][player] *= multiplier  # Win pays 1:1
+            print(f"{player_hand['name'][player]} wins and has {player_hand['wager'][player]}! ")
+        elif player_value == dealer_value:
+            print(f"Push! {player_hand['name'][player]} and the Dealer have an equal card value, {player_hand['name'][player]} keeps {player_hand['wager'][player]}! ")
+            pass  # Push - keep original wager
+        else:
+            player_hand['wager'][player] = 0  # Lose
+            print(
+                f"{player_hand['name'][player]} looses, and has {player_hand['wager'][player]}! ")
+    game = False
 
 
 
