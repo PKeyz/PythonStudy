@@ -104,26 +104,31 @@ Problems:
 
 REFACTORED: Three Separate Layers
 ----------------------------------
-
+Defining what something IS
 Layer 1: Domain Models (Card, Hand, Player)
     - Pure data and rules
     - No I/O, no external dependencies
     - Testable with simple assertions
 
+Calculating or checking rules 
 Layer 2: Game Logic (BlackjackGame)
     - Orchestrates the rules
     - No I/O, just pure functions
     - Returns results, doesn't print them
 
+Talking to humans
 Layer 3: User Interface (ConsoleUI)
     - Handles all input/output
     - Doesn't know game rules
     - Could be swapped for GUI without changing game
 
+Making decisions about flow
 Layer 4: Coordinator (GameCoordinator)
     - Connects UI to game logic
     - Main game flow
 
+Constants/settings → Config
+Layer 5
 
 EXAMPLE: Hit Function Comparison
 ---------------------------------
