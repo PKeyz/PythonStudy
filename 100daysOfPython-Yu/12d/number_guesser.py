@@ -97,6 +97,7 @@ class ConsoleUI:
     @staticmethod
     def too_high():
         print(f"Too high!\nGuess again.")
+
     @staticmethod
     def too_low():
         print(f"Too low!\nGuess again.")
