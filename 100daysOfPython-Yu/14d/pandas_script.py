@@ -1,12 +1,8 @@
 import pandas as pd
-path = "celebreties.csv"
-text_data = pd.read_csv(path, sep=",",usecols=["Username","Owner","Followers (Millions)","Profession/Activity","Country"])
 
-result = text_data.to_dict(orient="records")
-result.to_
-
-#TODO 1: Save result to dict file for later iterations
-print_to_dict_file = result
-
-
-print(result)
+def transform_list_to_dict():
+    df = pd.read_csv(filepath_or_buffer='./celebreties.csv')
+    dict_of_list = df.to_dict(orient='records')
+    return dict_of_list
+celebreties = transform_list_to_dict()
+print(celebreties)
