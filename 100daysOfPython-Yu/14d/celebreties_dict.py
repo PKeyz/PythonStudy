@@ -1,5 +1,0 @@
-celebreties = {
-    "username" : [],
-
-
-}
