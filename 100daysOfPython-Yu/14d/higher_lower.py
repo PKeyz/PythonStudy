@@ -1,4 +1,6 @@
 import random
+from unittest import skip
+
 import pandas_script as celebrity_csv_script
 
 
@@ -11,7 +13,7 @@ celebrities_dict = celebrity_csv_script.transform_list_to_dict()
 #### Set magic numbers ####
 
 #Entries in the csv file
-AMOUNT_OF_ENTRIES = 50
+AMOUNT_OF_ENTRIES = 49
 
 #Set score variable for right guesses
 user_score = 0
@@ -26,11 +28,14 @@ def check_if_numbers_uneven(a,b):
         return True
 
 #
-def higher_lower(user_guess,second_option):
-    if user_guess > second_option:
-        return True
-    else:
+def compare_equality(user_guess,second_option):
+    '''
+    Compares if numbers of both celebs are unequal --> one is higher than the other
+    '''
+    if user_guess != second_option:
         return False
+    else:
+        return True
 
 #get random entry from celebrities.csv
 def retrieve_rand_celebrity_number():
@@ -55,65 +60,78 @@ def generate_comparison_string(celebrity_entry_list):
     """
     random_celebrity = celebrity_entry_list
 
-    print(f"{random_celebrity[0]}, a {celebrity_entry_list[2]}, from {celebrity_entry_list[3]}")
-
-
-# print ascii when starting the game:
-print(r''' _   _ _       _                 _
-| | | (_) __ _| |__   ___ _ __  | |    _____      _____ _ __
-| |_| | |/ _` | '_ \ / _ \ '__| | |   / _ \ \ /\ / / _ \ '__|
-|  _  | | (_| | | | |  __/ |    | |__| (_) \ V  V /  __/ |
-|_|_|_|_|\__, |_| |_|\___|_|    |_____\___/ \_/\_/ \___|_|
- / ___|_ |___/___  ___ ___  ___ _ __
-| |  _| | | |/ _ \/ __/ __|/ _ \ '__|
-| |_| | |_| |  __/\__ \__ \  __/ |
- \____|\__,_|\___||___/___/\___|_|                           
-                                                              ''')
-
-num1 = retrieve_rand_celebrity_number()
-celebrty_data_list = retrieve_rand_celebrity_data(num1)
-generate_comparison_string(celebrty_data_list)
-print(r'''
-__     ______   
-\ \   / / ___|  
- \ \ / /\___ \  
-  \ V /  ___) | 
-   \_/  |____(_)
-''')
-# enter loop based on boolean e.g. UserGuessCorrect = True
-
-#while (guessing_on_track):
-
-num2 = retrieve_rand_celebrity_number()
-celebrty_data_list = retrieve_rand_celebrity_data(num2)
-generate_comparison_string(celebrty_data_list)
-
-# print Compare A + their attr + their attr. values
-# print Compare B + their attr + their attr. values
-# compare who has higher value as float
-# save as some higher/winner variable
-# take user input as A | B .toLowerCase
-# if value not A | B .. prompt to repeat input
-# elif wrong guess  !+ higher value/winner :
-#
-#     exit loop
-#
-#     print You lost with score x text
-# else: score += 1
-#     A = last winner
-#     B = new random entry from list
-#     repeat loop
+    celebrity_string = (f"{random_celebrity[0]}, a {celebrity_entry_list[2]}, from {celebrity_entry_list[3]}")
+    return celebrity_string
 
 
 
-# guess who has more followers in M  - A or B
-#
-# when False -> Print you lost + score of right answers
-#
-# if right B becomes new A + new B is generated from dict
-#     repeat the cycle
-#     += 1 to score for each right guess
+#### GAME ####
+isGame = True
+while isGame:
 
-#     terminate game when guess = False
-#     display score
+    #while isGame:
+        # print ascii when starting the game:
+    print(r''' 
+     _   _ _       _                 _                           
+    | | | (_) __ _| |__   ___ _ __  | |    _____      _____ _ __ 
+    | |_| | |/ _` | '_ \ / _ \ '__| | |   / _ \ \ /\ / / _ \ '__|
+    |  _  | | (_| | | | |  __/ |    | |__| (_) \ V  V /  __/ |   
+    |_|_|_|_|\__, |_| |_|\___|_|    |_____\___/ \_/\_/ \___|_|   
+     / ___|_ |___/___  ___ ___  ___ _ __                         
+    | |  _| | | |/ _ \/ __/ __|/ _ \ '__|                        
+    | |_| | |_| |  __/\__ \__ \  __/ |                           
+     \____|\__,_|\___||___/___/\___|_|                                                      
+                                                                  ''')
+
+    isEqual = True
+    if isEqual:
+        # Generate both entries and retrieve their data
+        num1 = retrieve_rand_celebrity_number()
+        celebrity_data_list1 = retrieve_rand_celebrity_data(num1)
+        follower_count_1 = celebrity_data_list1[2]
+
+        num2 = retrieve_rand_celebrity_number()
+        celebrity_data_list2 = retrieve_rand_celebrity_data(num2)
+        follower_count_2 = celebrity_data_list2[2]
+        # Compare their numbers, if unequal repeat generation, else use for the comparison
+        isEqual = compare_equality(follower_count_1, follower_count_2)
+
+
+    celebrity_string_1 = generate_comparison_string(celebrity_data_list1)
+    print(f"Compare A: {celebrity_string_1}")
+    print(r'''
+    __     ______   
+    \ \   / / ___|  
+     \ \ / /\___ \  
+      \ V /  ___) | 
+       \_/  |____(_)
+    ''')
+    # enter loop based on boolean e.g. UserGuessCorrect = True
+
+    #while (guessing_on_track):
+
+    celebrity_string_2 = generate_comparison_string(celebrity_data_list2)
+    print(f"Compare B: {celebrity_string_2}")
+
+    # print(rf'''
+    #  ____
+    # / ___|  ___ ___  _ __ ___ _
+    # \___ \ / __/ _ \| '__/ _ (_)
+    #  ___) | (_| (_) | | |  __/_
+    # |____/ \___\___/|_|  \___(_)
+    #
+    # {user_score}
+    # ''')
+
+    user_choice = input('Who has more followers? Type "A" or "B": ')
+    if user_choice == "A" and (celebrity_data_list1[1] > celebrity_data_list2[1]):
+        user_score += 1
+        print(f"This is correct!\n{celebrity_data_list1[0]} has more followers!\nYour new score is {user_score}\n")
+    elif user_choice == "B" and (celebrity_data_list2[1] > celebrity_data_list1[1]):
+        user_score += 1
+        print(f"This is correct!\n{celebrity_data_list2[0]} has more followers!\nYour new score is {user_score}\n")
+    else:
+        isGame = False
+        print(f"Sorry, that's wrong. Final score: {user_score}")
+
 
