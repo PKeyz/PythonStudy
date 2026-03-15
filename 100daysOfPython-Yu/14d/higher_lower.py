@@ -99,7 +99,7 @@ while isGame:
     ''')
 
     celebrity_string_2 = generate_comparison_string(celebrity_data_list2)
-    print(f"Compare B: {celebrity_string_2}")
+    print(f"Against B: {celebrity_string_2}")
 
     user_choice = input('Who has more followers? Type "A" or "B": ')
     if user_choice == "A" and (celebrity_data_list1[1] > celebrity_data_list2[1]):
