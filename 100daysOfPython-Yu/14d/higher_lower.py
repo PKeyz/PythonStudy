@@ -1,6 +1,4 @@
 import random
-from unittest import skip
-
 import pandas_script as celebrity_csv_script
 
 
@@ -50,12 +48,6 @@ def retrieve_rand_celebrity_list(random_celebrity_dict_entry):
     country = random_celebrity_dict_entry['Country']
     celebrity_entry_list = [owner,number,activity,country]
     return celebrity_entry_list
-
-# def get_follower_count():
-#     num1 = retrieve_rand_celebrity_from_dict()
-#     celebrity_data_list1 = retrieve_rand_celebrity_list(num1)
-#     follower_count = celebrity_data_list1[1]
-#     return follower_count
 
 def generate_comparison_string(celebrity_entry_list):
     """
@@ -114,16 +106,6 @@ while isGame:
 
         celebrity_string_2 = generate_comparison_string(celebrity_data_list2)
         print(f"Compare B: {celebrity_string_2}")
-
-        # print(r'''
-        #  ____
-        # / ___|  ___ ___  _ __ ___ _
-        # \___ \ / __/ _ \| '__/ _ (_)
-        #  ___) | (_| (_) | | |  __/_
-        # |____/ \___\___/|_|  \___(_)
-        #
-        # {user_score}
-        # ''')
 
         user_choice = input('Who has more followers? Type "A" or "B": ')
         if user_choice == "A" and (celebrity_data_list1[1] > celebrity_data_list2[1]):
