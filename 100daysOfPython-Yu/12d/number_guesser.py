@@ -47,7 +47,7 @@ class Enums:
 
 @dataclass
 class Guesser:
-    """Guesser class generates a random number in a range, checks if user_guess is correct"""
+    """Guesser class generates a random number in a range, checks if number1 is correct"""
     def __init__(self):
         self.rand_num = random.randint(GameConfig.LOWEST_NUMBER,GameConfig.HIGHEST_NUMBER)
 
