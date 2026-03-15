@@ -58,6 +58,18 @@ def generate_comparison_string(celebrity_entry_list):
     celebrity_string = (f"{random_celebrity[0]}, a {celebrity_entry_list[2]}, from {celebrity_entry_list[3]}")
     return celebrity_string
 
+def evaluate_user_choice(celebrity_data_list1,celebrity_data_list2,user_choice):
+    if user_choice == "A" and (celebrity_data_list1[1] > celebrity_data_list2[1]):
+        increase_user_score()
+        print(f"This is correct!\n{celebrity_data_list1[0]} has more followers!\nYour new score is {user_score}\n")
+    elif user_choice == "B" and (celebrity_data_list2[1] > celebrity_data_list1[1]):
+        increase_user_score()
+        print(f"This is correct!\n{celebrity_data_list2[0]} has more followers!\nYour new score is {user_score}\n")
+        celebrity_data_list1 = celebrity_data_list2
+        follower_count_1 = follower_count_2
+    else:
+        print(f"Sorry, that's wrong. Final score: {user_score}")
+        isGame = False
 
 #### GAME ####
 num1 = retrieve_rand_celebrity_from_dict()
@@ -102,6 +114,8 @@ while isGame:
     print(f"Against B: {celebrity_string_2}")
 
     user_choice = input('Who has more followers? Type "A" or "B": ')
+    # Solution 1:
+
     if user_choice == "A" and (celebrity_data_list1[1] > celebrity_data_list2[1]):
         increase_user_score()
         print(f"This is correct!\n{celebrity_data_list1[0]} has more followers!\nYour new score is {user_score}\n")
@@ -115,5 +129,9 @@ while isGame:
         isGame = False
 
 
+    #Solution 2:
+    #evaluate_user_choice(celebrity_data_list1,celebrity_data_list2,user_choice)
 
-
+    # compare_higher_follower_count :: compares follower_count1 vs follower_count2  --> returns "A" or "B"
+    # evaluate_user_choice :: --> compare user_choice to compare_higher_follower_count --> return True (user guessed right)/False (user guessed wrong)
+    # act_on_user_choice() :: if right A score +=1, if right B score +1 AND values1 = values2, else break loop - end game
