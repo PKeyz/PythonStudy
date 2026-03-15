@@ -60,65 +60,60 @@ def generate_comparison_string(celebrity_entry_list):
 
 
 #### GAME ####
+num1 = retrieve_rand_celebrity_from_dict()
+celebrity_data_list1 = retrieve_rand_celebrity_list(num1)
+follower_count_1 = celebrity_data_list1[1]
 
 isGame = True
 while isGame:
+    # print ascii when starting the game:
+    print(r''' 
+     _   _ _       _                 _                           
+    | | | (_) __ _| |__   ___ _ __  | |    _____      _____ _ __ 
+    | |_| | |/ _` | '_ \ / _ \ '__| | |   / _ \ \ /\ / / _ \ '__|
+    |  _  | | (_| | | | |  __/ |    | |__| (_) \ V  V /  __/ |   
+    |_|_|_|_|\__, |_| |_|\___|_|    |_____\___/ \_/\_/ \___|_|   
+     / ___|_ |___/___  ___ ___  ___ _ __                         
+    | |  _| | | |/ _ \/ __/ __|/ _ \ '__|                        
+    | |_| | |_| |  __/\__ \__ \  __/ |                           
+     \____|\__,_|\___||___/___/\___|_|                                                      
+                                                                  ''')
 
-    num1 = retrieve_rand_celebrity_from_dict()
-    celebrity_data_list1 = retrieve_rand_celebrity_list(num1)
-    follower_count_1 = celebrity_data_list1[1]
+    isEqual = True
+    while isEqual:
+        num2 = retrieve_rand_celebrity_from_dict()
+        celebrity_data_list2 = retrieve_rand_celebrity_list(num2)
+        follower_count_2 = celebrity_data_list2[1]
 
-    isWinning = True
-    while isWinning:
-        # Generate both entries and retrieve their data
+        # Compare their numbers, if unequal repeat generation, else use for the comparison
+        isEqual = compare_equality(follower_count_1, follower_count_2)
 
-        # print ascii when starting the game:
-        print(r''' 
-         _   _ _       _                 _                           
-        | | | (_) __ _| |__   ___ _ __  | |    _____      _____ _ __ 
-        | |_| | |/ _` | '_ \ / _ \ '__| | |   / _ \ \ /\ / / _ \ '__|
-        |  _  | | (_| | | | |  __/ |    | |__| (_) \ V  V /  __/ |   
-        |_|_|_|_|\__, |_| |_|\___|_|    |_____\___/ \_/\_/ \___|_|   
-         / ___|_ |___/___  ___ ___  ___ _ __                         
-        | |  _| | | |/ _ \/ __/ __|/ _ \ '__|                        
-        | |_| | |_| |  __/\__ \__ \  __/ |                           
-         \____|\__,_|\___||___/___/\___|_|                                                      
-                                                                      ''')
+    celebrity_string_1 = generate_comparison_string(celebrity_data_list1)
+    print(f"Compare A: {celebrity_string_1}")
+    print(r'''
+    __     ______   
+    \ \   / / ___|  
+     \ \ / /\___ \  
+      \ V /  ___) | 
+       \_/  |____(_)
+    ''')
 
-        isEqual = True
-        while isEqual:
-            num2 = retrieve_rand_celebrity_from_dict()
-            celebrity_data_list2 = retrieve_rand_celebrity_list(num2)
-            follower_count_2 = celebrity_data_list2[1]
+    celebrity_string_2 = generate_comparison_string(celebrity_data_list2)
+    print(f"Compare B: {celebrity_string_2}")
 
-            # Compare their numbers, if unequal repeat generation, else use for the comparison
-            isEqual = compare_equality(follower_count_1, follower_count_2)
+    user_choice = input('Who has more followers? Type "A" or "B": ')
+    if user_choice == "A" and (celebrity_data_list1[1] > celebrity_data_list2[1]):
+        increase_user_score()
+        print(f"This is correct!\n{celebrity_data_list1[0]} has more followers!\nYour new score is {user_score}\n")
+    elif user_choice == "B" and (celebrity_data_list2[1] > celebrity_data_list1[1]):
+        increase_user_score()
+        print(f"This is correct!\n{celebrity_data_list2[0]} has more followers!\nYour new score is {user_score}\n")
+        celebrity_data_list1 = celebrity_data_list2
+        follower_count_1 = follower_count_2
+    else:
+        print(f"Sorry, that's wrong. Final score: {user_score}")
+        isGame = False
 
-        celebrity_string_1 = generate_comparison_string(celebrity_data_list1)
-        print(f"Compare A: {celebrity_string_1}")
-        print(r'''
-        __     ______   
-        \ \   / / ___|  
-         \ \ / /\___ \  
-          \ V /  ___) | 
-           \_/  |____(_)
-        ''')
 
-        celebrity_string_2 = generate_comparison_string(celebrity_data_list2)
-        print(f"Compare B: {celebrity_string_2}")
-
-        user_choice = input('Who has more followers? Type "A" or "B": ')
-        if user_choice == "A" and (celebrity_data_list1[1] > celebrity_data_list2[1]):
-            increase_user_score()
-            print(f"This is correct!\n{celebrity_data_list1[0]} has more followers!\nYour new score is {user_score}\n")
-        elif user_choice == "B" and (celebrity_data_list2[1] > celebrity_data_list1[1]):
-            increase_user_score()
-            print(f"This is correct!\n{celebrity_data_list2[0]} has more followers!\nYour new score is {user_score}\n")
-            celebrity_data_list1 = celebrity_data_list2
-            follower_count_1 = follower_count_2
-        else:
-            print(f"Sorry, that's wrong. Final score: {user_score}")
-            isWinning = False
-            isGame = False
 
 
