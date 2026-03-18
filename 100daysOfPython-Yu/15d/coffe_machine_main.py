@@ -1,3 +1,27 @@
+from numpy.random.mtrand import choice
+
+#ENUMS
+WATER                   = "water"
+MILK                    = "milk"
+COFFEE                  = "coffee"
+PRICE                   = "price"
+MONEY                   = "money"
+ESPRESSO                = "Espresso"
+LATTE                   = "Latte"
+CAPPUCCINO              = "Cappuccino"
+REPORT                  = "Report"
+OFF                     = "Off"
+PENNY                   = "Penny"
+NICKEL                  = "Nickel"
+DIME                    = "Dime"
+QUARTER                 = "Quarter"
+#to delete!
+RESOURCE_LIST_WATER     = 0
+RESOURCE_LIST_MILK      = 1
+RESOURCE_LIST_COFFEE    = 2
+RESOURCE_LIST_PRICE     = 3
+
+
 menu = {
     "Espresso":{
         "water" :   50,
@@ -36,17 +60,13 @@ machine_resources = {
 
 ON = True
 
-
 # 2. Turn off the Coffee Machine by entering “off” to the prompt.
 # a. For maintainers of the coffee machine, they can use “off” as the secret word to turn off
 # the machine. Your code should end execution when this happens.
-
-def shut_down_machine(user_input):
+def shut_down_machine():
     """Shut down the machine"""
-    if user_input == "off":
-        global ON
-        ON = False
-    return ON
+    global ON
+    ON = False
 
 # 3. Print report.
 # a. When the user enters “report” to the prompt, a report should be generated that shows
@@ -55,39 +75,28 @@ def shut_down_machine(user_input):
 # Milk: 50ml
 # Coffee: 76g
 # Money: $2.5
-def send_report(user_input):
+def send_report():
     """Prints machine resources report to console"""
-    if user_input == "report":
-        print(f"Water: {machine_resources['water']}ml\nMilk: {machine_resources['milk']}ml\nCoffee: {machine_resources['coffee']}g\nMoney: ${machine_resources['money']}:")
+    print(f"Water: {machine_resources[WATER]}ml\nMilk: {machine_resources[MILK]}ml\nCoffee: {machine_resources[COFFEE]}g\nMoney: ${machine_resources[MONEY]}:")
 
 # 1. Prompt user by asking “What would you like? (espresso/latte/cappuccino):”
 # a. Check the user’s input to decide what to do next.
 # b. The prompt should show every time action has completed, e.g. once the drink is
 # dispensed. The prompt should show again to serve the next customer.
-
 def ask_user_choice():
     """Ask the user to choose an option"""
-    user_input = input("What would you like? (espresso/latte/cappuccino):\n")
+    user_input = input(f"What would you like? ({ESPRESSO}/{LATTE}/{CAPPUCCINO}):\n").capitalize()
     return user_input
 
-def get_user_choice_resources():
+def get_user_choice_resources(user_input):
     """Main user choice interface function for menu selection, report and shutdown"""
-    choice = ask_user_choice().lower()
-    if choice == "espresso":
-        resource_list = [menu["Espresso"]["water"],menu["Espresso"]["milk"],menu["Espresso"]["coffee"],menu["Espresso"]["price"]]
-        return resource_list
-    elif choice == "latte":
-        resource_list = [menu["Latte"]["water"],menu["Latte"]["milk"],menu["Latte"]["coffee"],menu["Latte"]["price"]]
-        return resource_list
-    elif choice == "cappuccino":
-        resource_list = [menu["Cappuccino"]["water"],menu["Cappuccino"]["milk"],menu["Cappuccino"]["coffee"],menu["Cappuccino"]["price"]]
-        return resource_list
-    elif choice == "report":
-        send_report(choice)
-    elif choice == "off":
-        shut_down_machine(choice)
-    else:
+    user_choice = user_input
+    if user_input not in (ESPRESSO, LATTE, CAPPUCCINO, REPORT, OFF):
         print("Please enter either 'espresso','latte' or 'cappuccino'.")
+    elif user_choice == REPORT:
+        send_report()
+    elif user_choice == OFF:
+        shut_down_machine()
 
 # 4. Check resources sufficient?
 # a. When the user chooses a drink, the program should check if there are enough
@@ -96,36 +105,49 @@ def get_user_choice_resources():
 # not continue to make the drink but print: “Sorry there is not enough water.”
 # c. The same should happen if another resource is depleted, e.g. milk or coffee.
 
-def insufficient_resources_feedback(resource_list:list):
+def insufficient_resources_feedback(user_input):
     """Print statements for def check sufficient_resources"""
-    if machine_resources['water']>= resource_list[0]:
+    if machine_resources[WATER] <= menu[user_input][WATER]:
         print("Sorry, there is not enough water.\n")
-    elif machine_resources['milk']<= resource_list[1]:
-        print("Sorry, there is not enough water.\n")
-    elif machine_resources['coffee']<= resource_list[2]:
+    elif machine_resources[WATER] <= menu[user_input][MILK]:
+        print("Sorry, there is not enough milk.\n")
+    elif machine_resources[WATER]<= menu[user_input][COFFEE]:
         print("Sorry, there is not enough coffee.\n")
 
-def check_sufficient_resources(resource_list):
+def check_sufficient_resources(user_input):
     """Checks if machine has sufficient resources to  produce user selection"""
-    if (machine_resources['water']>= resource_list[0] and machine_resources['milk'] >= resource_list[1] and machine_resources['coffee'] >= resource_list[2]):
+    if (machine_resources[WATER]>= menu[user_input][WATER]) and (machine_resources[WATER] >= menu[user_input][MILK]) and (machine_resources[COFFEE] >= menu[user_input][COFFEE]):
         return True
     else:
-        insufficient_resources_feedback(resource_list)
+        insufficient_resources_feedback(user_input)
         return False
 
 def deduct_machine_resources(resource_list):
-    machine_resources['water'] -= resource_list[0]
-    machine_resources['milk'] -= resource_list[1]
-    machine_resources['coffee'] -= resource_list[2]
+    machine_resources[WATER] -= resource_list[0]
+    machine_resources[WATER] -= resource_list[1]
+    machine_resources[WATER] -= resource_list[2]
 
 # 5. Process coins.
 # a. If there are sufficient resources to make the drink selected, then the program should
 # prompt the user to insert coins.
+def print_price(user_input):
+    """Payment prompt to the user with exact price of selection"""
+    print(f"Please insert ${menu[user_input][PRICE]}")
+
 # b. Remember that quarters = $0.25, dimes = $0.10, nickles = $0.05, pennies = $0.01
 # c. Calculate the monetary value of the coins inserted. E.g. 1 quarter, 2 dimes, 1 nickel, 2
 # pennies = 0.25 + 0.1 x 2 + 0.05 + 0.01 x 2 = $0.52
-def process_payment(resource_list):
-    machine_resources['money'] += resource_list[3]
+def calculate_user_payment():
+    user_quarters   = int(input("How many quarters?: "))
+    user_dimes      = int(input("How many dimes?: "))
+    user_nickles    = int(input("How many nickles?: "))
+    user_pennies    = int(input("How many pennies?: "))
+    user_payment = (user_quarters * 0.25) + (user_dimes * 0.1) + (user_nickles * 0.05) + (user_pennies * 0.01)
+    return user_payment
+
+def process_payment(user_payment,user_input):
+    if user_payment < menu[user_input][MONEY]:
+        machine_resources[MONEY] += menu[user_input][PRICE]
 
 # 6. Check transaction successful?
 # a. Check that the user has inserted enough money to purchase the drink they selected.
@@ -159,11 +181,18 @@ def process_payment(resource_list):
 # latte was their choice of drink
 
 
+user_input = ask_user_choice
+get_user_choice_resources(user_input)
 
-while ON:
-    user_choice_resources = get_user_choice_resources()
-    print(user_choice_resources)
 
+# while ON:
+#     user_choice_resources = get_user_choice_resources()
+#     print(user_choice_resources)
+#     enough_resources_bool = check_sufficient_resources(user_choice_resources)
+#     # if enough_resources_bool:
+#     #     print_price(user_choice_resources)
+#     #     # process_payment(user_choice_resources)
+#     #     # deduct_machine_resources(user_choice_resources)
 
 
 
