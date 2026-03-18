@@ -1,39 +1,40 @@
 menu = {
-        "Espresso":{
-            "water" :   50,
-            "coffee":   18,
-            "milk"  :   0,
-            "price" :   1.5
-            },
-        "Latte": {
-            "water" :   200,
-            "coffee":   24,
-            "milk"  :   150,
-            "price" :   2.5
-            },
-        "Cappuccino":{
-            "water" :   250,
-            "coffee":   24,
-            "milk"  :   100,
-            "price" :   3
-            }
+    "Espresso":{
+        "water" :   50,
+        "milk"  :   0,
+        "coffee":   18,
+        "price" :   1.5
+        },
+    "Latte": {
+        "water" :   200,
+        "milk"  :   150,
+        "coffee":   24,
+        "price" :   2.5
+        },
+    "Cappuccino":{
+        "water" :   250,
+        "milk"  :   100,
+        "coffee":   24,
+        "price" :   3
+        }
 }
 
 monetary_value = {
-        "Penny"     :   {"value" : 0.01},
-        "Nickel"    :   {"value" : 0.05},
-        "Dime"      :   {"value" : 0.1},
-        "Quarter"   :   {"value" : 0.25}
+    "Penny"     :   {"value" : 0.01},
+    "Nickel"    :   {"value" : 0.05},
+    "Dime"      :   {"value" : 0.1},
+    "Quarter"   :   {"value" : 0.25}
 }
 
 machine_resources = {
     "water" :   50,
     "coffee":   100,
     "milk"  :   200,
+    "money" :   0
 }
 
 
-
+ON = True
 
 #TODO
 # 1. Prompt user by asking “What would you like? (espresso/latte/cappuccino):”
@@ -41,9 +42,39 @@ machine_resources = {
 # b. The prompt should show every time action has completed, e.g. once the drink is
 # dispensed. The prompt should show again to serve the next customer.
 
+def ask_user_choice():
+    """Ask the user to choose an option"""
+    user_input = input("What would you like? (espresso/latte/cappuccino):\n")
+    return user_input
+
+def get_user_choice_resources(choice):
+    #choice = ask_user_choice()
+    if choice == "espresso":
+        resource_list = [menu["Espresso"]["water"],menu["Espresso"]["milk"],menu["Espresso"]["coffee"],menu["Espresso"]["price"]]
+        return resource_list
+    elif choice == "latte":
+        resource_list = [menu["Latte"]["water"],menu["Latte"]["milk"],menu["Latte"]["coffee"],menu["Latte"]["price"]]
+        return resource_list
+    elif choice == "cappuccino":
+        resource_list = [menu["Cappuccino"]["water"],menu["Cappuccino"]["milk"],menu["Cappuccino"]["coffee"],menu["Cappuccino"]["price"]]
+        return resource_list
+    elif choice == "report" or choice == "off":
+        pass
+    else:
+        print("Please enter either 'espresso','latte' or 'cappuccino'.")
+
+
+
+
 # 2. Turn off the Coffee Machine by entering “off” to the prompt.
 # a. For maintainers of the coffee machine, they can use “off” as the secret word to turn off
 # the machine. Your code should end execution when this happens.
+def shut_down_machine(user_input):
+    """Shut down the machine"""
+    if user_input == "off":
+        global ON
+        ON = False
+    return ON
 
 # 3. Print report.
 # a. When the user enters “report” to the prompt, a report should be generated that shows
@@ -52,6 +83,10 @@ machine_resources = {
 # Milk: 50ml
 # Coffee: 76g
 # Money: $2.5
+def send_report(user_input):
+    if user_input == "report":
+        print(f"Water: {machine_resources['water']}ml\nMilk: {machine_resources['milk']}ml\nCoffee: {machine_resources['coffee']}g\nMoney: ${machine_resources['money']}:")
+
 
 # 4. Check resources sufficient?
 # a. When the user chooses a drink, the program should check if there are enough
@@ -59,6 +94,8 @@ machine_resources = {
 # b. E.g. if Latte requires 200ml water but there is only 100ml left in the machine. It should
 # not continue to make the drink but print: “Sorry there is not enough water.”
 # c. The same should happen if another resource is depleted, e.g. milk or coffee.
+# def check_sufficient_resources():
+
 
 # 5. Process coins.
 # a. If there are sufficient resources to make the drink selected, then the program should
@@ -97,3 +134,24 @@ machine_resources = {
 # Money: $2.5
 # b. Once all resources have been deducted, tell the user “Here is your latte. Enjoy!”. If
 # latte was their choice of drink
+
+
+user_choice = ask_user_choice()
+user_choice_resources = get_user_choice_resources(user_choice)
+# while ON:
+#     pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
