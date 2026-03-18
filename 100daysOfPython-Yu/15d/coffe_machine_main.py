@@ -36,7 +36,7 @@ machine_resources = {
 
 ON = True
 
-#TODO
+
 # 1. Prompt user by asking “What would you like? (espresso/latte/cappuccino):”
 # a. Check the user’s input to decide what to do next.
 # b. The prompt should show every time action has completed, e.g. once the drink is
@@ -47,8 +47,9 @@ def ask_user_choice():
     user_input = input("What would you like? (espresso/latte/cappuccino):\n")
     return user_input
 
-def get_user_choice_resources(choice):
-    #choice = ask_user_choice()
+def get_user_choice_resources():
+    """Prints"""
+    choice = ask_user_choice().lower()
     if choice == "espresso":
         resource_list = [menu["Espresso"]["water"],menu["Espresso"]["milk"],menu["Espresso"]["coffee"],menu["Espresso"]["price"]]
         return resource_list
@@ -62,9 +63,6 @@ def get_user_choice_resources(choice):
         pass
     else:
         print("Please enter either 'espresso','latte' or 'cappuccino'.")
-
-
-
 
 # 2. Turn off the Coffee Machine by entering “off” to the prompt.
 # a. For maintainers of the coffee machine, they can use “off” as the secret word to turn off
@@ -136,10 +134,10 @@ def send_report(user_input):
 # latte was their choice of drink
 
 
-user_choice = ask_user_choice()
-user_choice_resources = get_user_choice_resources(user_choice)
-# while ON:
-#     pass
+
+while ON:
+    user_choice_resources = get_user_choice_resources()
+    print(user_choice_resources)
 
 
 
