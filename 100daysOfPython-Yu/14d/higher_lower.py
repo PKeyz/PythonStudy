@@ -4,10 +4,6 @@ import pandas_script as celebrity_csv_script
 
 celebrities_dict = celebrity_csv_script.transform_list_to_dict()
 
-#TODO 1: List of People
-#TODO 2: Generate random Number to assign it to every one of the people
-#TODO 3: Deconstruct the game: Think of relevant functions parameters and variable_names
-
 #### Set magic numbers ####
 
 #Entries in the csv file
